@@ -1,0 +1,20 @@
+# Introduction to Official Statistics
+
+Official statistics are statistics published by government agencies or other public bodies such as international organizations as a public good. They provide quantitative or qualitative information on all major areas of citizens' lives, such as economic and social development, living conditions, health, education, and the environment.
+
+## 1. Key Frameworks
+The Sustainable Development Goals (SDGs) are a collection of 17 interlinked global goals designed to be a "blueprint to achieve a better and more sustainable future for all". The SDGs were set up in 2015 by the United Nations General Assembly and are intended to be achieved by the year 2030. In India, MoSPI is responsible for tracking SDG indicators.
+
+## 2. Statistical Methods
+Sampling is a process used in statistical analysis in which a predetermined number of observations are taken from a larger population. 
+- **Simple Random Sampling**: Every member of the population has an equal chance of being selected.
+- **Stratified Sampling**: The population is divided into subgroups (strata) based on similar characteristics, and samples are taken from each stratum. This ensures representation from all groups.
+
+## 3. Data Quality
+Coherence in data quality means that statistical outputs are consistent and comparable across different sources, time periods, and domains. Accuracy refers to the closeness of estimates to the exact or true values that the statistics were intended to measure.
+
+## 4. National Accounts
+National Accounts Statistics (NAS) provide a comprehensive macroeconomic framework. The Gross Domestic Product (GDP) is the most widely used measure of economic activity. The Consumer Price Index (CPI) measures changes in the price level of a weighted average market basket of consumer goods and services purchased by households.
+
+## 5. Technology in Statistics
+Modern statistical systems rely heavily on programming languages like Python and R. Python's Pandas library is extensively used for data manipulation and analysis, providing DataFrames for structured data operations. Data visualization is critical for disseminating statistical findings to policymakers.
