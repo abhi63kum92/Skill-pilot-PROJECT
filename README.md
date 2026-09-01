@@ -32,6 +32,7 @@
 
 - **Abhishek Kumar** ([@abhi63kum92](https://github.com/abhi63kum92)) — Lead Developer / Full-Stack & AI Architecture
 - **Ichhaa Dahiya** ([@ichhaadahiya-AI](https://github.com/ichhaadahiya-AI)) — Research, Frontend & MoSPI Competency Evaluation
+- **Suryanshi Sharma** ([@suryanshisharma-15](https://github.com/suryanshisharma-15)) — UI/UX Design, Data Modeling & iGOT Integration
 
 ---
 
