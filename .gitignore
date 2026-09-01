@@ -34,8 +34,10 @@ frontend/dist/
 .vite/
 frontend/.vite/
 
-# Temporary & Lock files
+# Temporary & Presentation files
 ~$*.pptx
+*.pptx
+generate_ppt.py
 *.log
 *.tmp
 .DS_Store
