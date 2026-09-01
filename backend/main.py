@@ -210,6 +210,66 @@ def seed_demo_users():
                 "is_admin": False,
                 "experience": 1,
             },
+            {
+                "email": "datascientist@mospi.gov.in",
+                "username": "neha_gupta",
+                "password": "password123",
+                "full_name": "Neha Gupta",
+                "designation": "Data Scientist",
+                "department": "Data Informatics and Innovation Division (DIID)",
+                "is_admin": False,
+                "experience": 4,
+            },
+            {
+                "email": "field@mospi.gov.in",
+                "username": "sunil_yadav",
+                "password": "password123",
+                "full_name": "Sunil Yadav",
+                "designation": "Field Investigator",
+                "department": "Field Operations Division (FOD)",
+                "is_admin": False,
+                "experience": 3,
+            },
+            {
+                "email": "member1@mospi.gov.in",
+                "username": "team_member_1",
+                "password": "password123",
+                "full_name": "Team Member 1",
+                "designation": "Statistical Officer",
+                "department": "National Statistical Office (NSO)",
+                "is_admin": False,
+                "experience": 2,
+            },
+            {
+                "email": "member2@mospi.gov.in",
+                "username": "team_member_2",
+                "password": "password123",
+                "full_name": "Team Member 2",
+                "designation": "Data Scientist",
+                "department": "DIID / MoSPI",
+                "is_admin": False,
+                "experience": 3,
+            },
+            {
+                "email": "member3@mospi.gov.in",
+                "username": "team_member_3",
+                "password": "password123",
+                "full_name": "Team Member 3",
+                "designation": "Junior Statistical Officer",
+                "department": "Survey Design and Research Division (SDRD)",
+                "is_admin": False,
+                "experience": 1,
+            },
+            {
+                "email": "member4@mospi.gov.in",
+                "username": "team_member_4",
+                "password": "password123",
+                "full_name": "Team Member 4",
+                "designation": "Field Investigator",
+                "department": "Field Operations Division (FOD)",
+                "is_admin": False,
+                "experience": 2,
+            },
         ]
         for d in demos:
             if not get_user_by_email(db, d["email"]):
@@ -226,7 +286,7 @@ def seed_demo_users():
                 user.experience_years = d["experience"]
                 db.add(user)
                 db.commit()
-                print(f"✅ Demo user seeded: {d['email']}")
+                print(f"[OK] Demo user seeded: {d['email']}")
     finally:
         db.close()
 
@@ -733,7 +793,7 @@ Uploaded Material Content:
 """
     # 1. Try Gemini
     if GEMINI_API_KEY and genai:
-        for model_name in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro"]:
+        for model_name in ["gemini-3.6-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-pro"]:
             try:
                 model = genai.GenerativeModel(model_name)
                 response = model.generate_content(prompt)
@@ -749,7 +809,7 @@ Uploaded Material Content:
     # 2. Try Groq Cloud (Ultra-Fast LLM)
     if GROQ_API_KEY:
         import requests
-        groq_models = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b", "llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+        groq_models = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b", "allam-2-7b"]
         for g_model in groq_models:
             try:
                 groq_res = requests.post(
@@ -761,7 +821,7 @@ Uploaded Material Content:
                     json={
                         "model": g_model,
                         "messages": [
-                            {"role": "system", "content": "You are a specialized MoSPI & iGOT exam creation assistant. Respond only with valid JSON formatted with a 'questions' key."},
+                            {"role": "system", "content": "You are a specialized MoSPI & iGOT exam creation assistant. Respond only with valid JSON formatted with a 'questions' key containing a list of multiple choice questions with id, question, options (A,B,C,D), correct_answer, explanation, and topic."},
                             {"role": "user", "content": prompt}
                         ],
                         "response_format": {"type": "json_object"},
@@ -787,65 +847,100 @@ Uploaded Material Content:
 
 KNOWLEDGE_BASE = [
     {
-        "keywords": ["cpi", "wpi", "inflation", "price statistics", "consumer price index", "retail price"],
+        "keywords": ["hindi", "hindi jante ho", "hindi aati hai", "bhasha", "language", "हिंदी"],
+        "title": "Hindi Language Support",
+        "response": "🙏 **हाँ, मैं हिन्दी (Hindi) और English दोनों जानता हूँ!**\nमैं भारत सरकार के सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय (MoSPI) और iGOT कर्मयोगी का AI सहायक हूँ। आप मुझसे हिन्दी में सांख्यिकी पद्धतियाँ (Sampling, CPI, SNA, PLFS), स्किल गैप और iGOT कोर्सेस के बारे में कोई भी प्रश्न पूछ सकते हैं।\n\nआप माइक 🎙️ दबाकर भी हिन्दी में बोल सकते हैं!"
+    },
+    {
+        "keywords": ["kaise ho", "how are you", "kya haal hai", "kya kar sakte ho", "who are you", "tum kaun ho", "intro", "help me"],
+        "title": "SkillPilot Voice Assistant Introduction",
+        "response": "👋 **नमस्ते! मैं SkillPilot AI वॉयस और नॉलेज असिस्टेंट हूँ।**\nमैं MoSPI अधिकारियों और सांख्यिकीविदों की क्षमता निर्माण में मदद करता हूँ:\n1. 🎯 **स्किल गैप एनालिसिस** (4 डोमेन: Statistical, Technical, Digital Governance, Behavioural)\n2. 📚 **iGOT कर्मयोगी और NSSTA कोर्स सुझाव**\n3. 🧠 **PDF/दस्तावेज़ों से AI क्विज़ जनरेशन**\n4. 📊 **आधिकारिक सांख्यिकी मानक** (NSSO, PLFS, CPI, GDP, DPDP Act 2023)\n\nआप मुझसे क्या पूछना चाहते हैं?"
+    },
+    {
+        "keywords": ["cpi", "wpi", "inflation", "price statistics", "consumer price index", "retail price", "mehngai"],
         "title": "Price Statistics & CPI/WPI Compilation",
         "response": "📊 **Price Statistics in MoSPI:**\n- **CPI (Consumer Price Index):** Measures retail inflation across a fixed basket of goods and services purchased by households (Base year: 2012=100). MoSPI compiles CPI (Rural, Urban, Combined) monthly.\n- **WPI (Wholesale Price Index):** Measures inflation at wholesale level, released by DPIIT.\n- **Recommended iGOT Course:** *'Consumer Price Index (CPI) & Inflation Metrics Compilation'* by MoSPI Price Division (18 Hours)."
     },
     {
-        "keywords": ["sampling", "stratified", "cluster", "sample design", "survey design", "multistage", "simple random"],
+        "keywords": ["sampling", "stratified", "cluster", "sample design", "survey design", "multistage", "simple random", "सैंपलिंग"],
         "title": "Sampling Methods & Survey Design",
         "response": "🎯 **Sampling Methods in Official Surveys:**\n- **Simple Random Sampling:** Every population unit has equal inclusion probability.\n- **Stratified Sampling:** Population is partitioned into homogeneous strata (e.g. rural/urban, district-wise) to minimize sampling variance.\n- **Multi-Stage Stratified Sampling:** Used by NSSO/MoSPI for large surveys like PLFS.\n- **Recommended iGOT Course:** *'Advanced Survey Sampling & Estimation Techniques'* by NSSTA (25 Hours)."
     },
     {
-        "keywords": ["national accounts", "gdp", "gva", "nas", "economic statistics", "sna 2008", "macroeconomic"],
+        "keywords": ["national accounts", "gdp", "gva", "nas", "economic statistics", "sna 2008", "macroeconomic", "जीडीपी"],
         "title": "System of National Accounts & GDP",
         "response": "🏛️ **National Accounts Statistics (NAS):**\n- Compiles India's Gross Domestic Product (GDP) and Gross Value Added (GVA) following the international **SNA 2008** standard.\n- Approaches: Production (Output) approach, Expenditure approach, and Income approach.\n- **Recommended iGOT Course:** *'System of National Accounts (SNA 2008) & GDP Compilation'* by MoSPI NAD (35 Hours)."
     },
     {
-        "keywords": ["sdg", "sustainable development", "nif", "un-sdg", "indicators", "target 2030"],
+        "keywords": ["sdg", "sustainable development", "nif", "un-sdg", "indicators", "target 2030", "एसडीजी"],
         "title": "SDG National Indicator Framework",
         "response": "🌍 **SDG Indicators & MoSPI:**\n- MoSPI is the nodal ministry for tracking India's progress across all **17 UN Sustainable Development Goals (2030 Agenda)**.\n- Uses the **National Indicator Framework (NIF)** comprising 300+ baseline statistical indicators.\n- **Recommended iGOT Course:** *'National Indicator Framework (NIF) for SDGs'* by NSSTA TPAC (15 Hours)."
     },
     {
-        "keywords": ["python", "pandas", "data science", "numpy", "matplotlib", "scripting", "programming"],
+        "keywords": ["python", "pandas", "data science", "numpy", "matplotlib", "scripting", "programming", "पायथन"],
         "title": "Python for Statistical Data Processing",
         "response": "🐍 **Python in Official Statistics:**\n- **Pandas:** Core library for handling survey microdata (DataFrames, filtering, group-by aggregations, merge/join operations).\n- **NumPy:** Numerical computations and vectorized array processing.\n- **Matplotlib / Seaborn:** Creating official charts, histograms, and distribution plots.\n- **Recommended iGOT Course:** *'Python for Statistical Data Processing & Analysis'* by Karmayogi Bharat (30 Hours)."
     },
     {
-        "keywords": ["dpdp", "privacy", "data privacy", "cybersecurity", "cyber", "data protection", "act 2023"],
+        "keywords": ["dpdp", "privacy", "data privacy", "cybersecurity", "cyber", "data protection", "act 2023", "प्राइवेसी"],
         "title": "DPDP Act 2023 & Citizen Data Governance",
         "response": "🔒 **Digital Personal Data Protection (DPDP) Act 2023:**\n- Governs the processing of digital personal data in India with strict obligations for Data Fiduciaries.\n- Mandates: Purpose limitation, data minimization, citizen consent frameworks, anonymization protocols, and cybersecurity controls.\n- **Recommended iGOT Course:** *'DPDP Act 2023 & Cybersecurity Essentials'* by Karmayogi Bharat (12 Hours)."
     },
     {
-        "keywords": ["skill gap", "competency", "frac", "readiness", "score", "framework", "analysis"],
+        "keywords": ["skill gap", "competency", "frac", "readiness", "score", "framework", "analysis", "स्किल गैप"],
         "title": "FRAC Competency Framework & Gap Computation",
         "response": "⚡ **How SkillPilot Computes Competency Gaps:**\n- Aligned with the **Karmayogi Bharat FRAC** framework across 4 domains: Statistical, Technical, Digital Governance, Behavioural.\n- **Formula:** Skill Gap = max(0, Role Target Level − Current Level).\n- **Role Readiness %:** (Σ Current Points / Σ Target Points) × 100.\n- Gaps ≥ 2 are flagged as **Critical** and prioritized for immediate iGOT training."
     },
     {
-        "keywords": ["igot", "karmayogi", "bharat", "mission karmayogi", "portal", "courses", "ehrms"],
+        "keywords": ["igot", "karmayogi", "bharat", "mission karmayogi", "portal", "courses", "ehrms", "कर्मयोगी"],
         "title": "iGOT Karmayogi Bharat Platform",
         "response": "🇮🇳 **iGOT Karmayogi Integration:**\n- India's flagship capacity-building platform under **Mission Karmayogi**.\n- SkillPilot maps your role gaps directly to accredited courses from NSSTA, ISTM, NIC, and Karmayogi Bharat.\n- Use the **'Sync with iGOT ID'** button on your Competency Profile to synchronize completed course credits!"
     },
     {
-        "keywords": ["mcq", "generate", "quiz", "upload", "pdf", "docx", "pptx", "diagnostic"],
+        "keywords": ["mcq", "generate", "quiz", "upload", "pdf", "docx", "pptx", "diagnostic", "क्विज़"],
         "title": "AI Quiz & Document Assessment Engine",
         "response": "🧠 **AI Quiz & MCQ Generator:**\n- Upload any training manual (PDF, Word, PPTX, TXT).\n- The AI engine extracts key definitions, formulas, and survey principles to generate custom MCQs.\n- Score ≥ 70% on an assessment to earn verified **Competency Level-Ups** that update your radar chart and learning path!"
     },
     {
-        "keywords": ["plfs", "asi", "nsso", "nso", "fod", "survey", "field operations"],
+        "keywords": ["plfs", "asi", "nsso", "nso", "fod", "survey", "field operations", "सर्वेक्षण"],
         "title": "Major MoSPI Surveys (PLFS, ASI, NSS)",
         "response": "📋 **Key Official Surveys in India:**\n- **PLFS (Periodic Labour Force Survey):** Measures employment, unemployment rates, and labor force participation (quarterly urban, annual rural).\n- **ASI (Annual Survey of Industries):** Principal source of industrial statistics and manufacturing growth metrics.\n- **NSS Household Surveys:** Socio-economic rounds covering consumer expenditure, health, education, and housing."
     },
     {
-        "keywords": ["gis", "spatial", "mapping", "qgis", "remote sensing", "isro", "census"],
-        "title": "GIS & Spatial Analytics in Statistics",
-        "response": "🗺️ **GIS & Geospatial Analysis:**\n- Essential for thematic census mapping, boundary delimitation, and agricultural crop estimation using satellite data.\n- Tools: QGIS, ArcGIS, Python GeoPandas, ISRO Bhuvan.\n- **Recommended Course:** *'GIS Mapping & Spatial Analysis for Census and Surveys'* by NSSTA / ISRO-NRSC (20 Hours)."
+        "keywords": ["jso", "junior statistical officer", "sss", "subordinate statistical", "jso promotion"],
+        "title": "Junior Statistical Officer (JSO) Role & Career",
+        "response": "👤 **Junior Statistical Officer (JSO) Profile:**\n- Cadre: Subordinate Statistical Service (SSS).\n- Core Duties: Field data collection, survey supervision (PLFS/ASI), scrutiny of schedules, and data validation.\n- Key Target Competencies: Sampling Methods (Level 3), Survey Design (Level 3), Python/SQL (Level 2), Data Quality (Level 3).\n- Career Progression: JSO → Senior Statistical Officer (SSO) → Indian Statistical Service (ISS) stream."
+    },
+    {
+        "keywords": ["iss", "indian statistical service", "upsc iss", "cadre", "civil service statistics"],
+        "title": "Indian Statistical Service (ISS)",
+        "response": "🏛️ **Indian Statistical Service (ISS):**\n- Group 'A' Central Civil Service recruited by UPSC.\n- Responsible for macroeconomic statistics, survey architecture, national accounts, and policy analytics across government ministries.\n- Core Focus: Advanced Econometrics, Big Data Analytics, UN-SNA standard alignment, and National Policy Formulation."
+    },
+    {
+        "keywords": ["nssta", "academy", "greater noida", "tpac", "training academy"],
+        "title": "National Statistical Systems Training Academy (NSSTA)",
+        "response": "🎓 **NSSTA (Greater Noida):**\n- The premier apex training academy under MoSPI.\n- Conducts induction and in-service training for ISS officers, SSS personnel, and international statisticians (SAARC/UN).\n- SkillPilot is integrated with the official **NSSTA 2026-27 TPAC (Training Programme & Activity Calendar)**."
+    },
+    {
+        "keywords": ["r language", "r programming", "r vs python", "stata", "spss"],
+        "title": "Statistical Computing: R vs Python vs Stata",
+        "response": "💻 **Statistical Software in MoSPI:**\n- **R Language:** Best for advanced econometric modeling, complex survey weighting (`survey` package), and statistical tests.\n- **Python:** Industry leader for microdata processing (Pandas), automated scraping, and Machine Learning pipelines.\n- **Stata & SPSS:** Widely used in NSSO divisions for rapid tabular analysis and cross-tabulations."
+    },
+    {
+        "keywords": ["certificate", "passport", "karma points", "badging", "micro credential", "प्रमाणपत्र"],
+        "title": "Certifications & Karma Points",
+        "response": "📜 **Digital Badges & Verified Certificates:**\n- Passing any SkillPilot AI Assessment with ≥70% score issues a digitally verified micro-credential.\n- Automatically synced to your **iGOT Karmayogi Digital Passport**.\n- Each completed training course earns **+150 Karma Points** on your official government profile!"
+    },
+    {
+        "keywords": ["scorm", "xapi", "lms export", "zip"],
+        "title": "SCORM 1.2 & xAPI Export",
+        "response": "📦 **SCORM 1.2 Interoperability:**\n- SkillPilot allows 1-click export of AI-generated quizzes and learning modules as SCORM 1.2 compliant ZIP packages.\n- These packages can be directly imported and hosted on iGOT Karmayogi Bharat, Diksha, or any standard government LMS."
     }
 ]
 
 
 def find_ai_response(query: str, user_role: str = "Statistical Officer") -> str:
-    q_clean = query.lower()
+    q_clean = query.lower().strip()
     best_match = None
     max_hits = 0
     for entry in KNOWLEDGE_BASE:
@@ -855,6 +950,11 @@ def find_ai_response(query: str, user_role: str = "Statistical Officer") -> str:
             best_match = entry
     if best_match and max_hits > 0:
         return best_match["response"]
+
+    # If greeting or conversational
+    if any(g in q_clean for g in ["hi", "hello", "hey", "namaste", "pranam", "नमस्ते"]):
+        return "👋 **Namaste! 🙏** I am your **SkillPilot MoSPI Assistant**.\nI can assist you with official survey methods (Sampling, PLFS, ASI), price index compilation (CPI/WPI), Python/R data science, and personalized iGOT Karmayogi courses. How can I help you today?"
+
     return f"Namaste! 🙏 As your **SkillPilot MoSPI Advisor**, I can assist with:\n- 🎯 **Competency Gap Analysis & Roles** (JSO, ISS Officer, Field Investigator, Data Scientist, Director)\n- 📚 **iGOT Karmayogi & NSSTA Course Mapping** (National Accounts, Sampling, Python, CPI, DPDP Act)\n- 🧠 **AI Quiz Generation from uploaded PDFs/Documents**\n- 📊 **Official Statistics Standards** (PLFS, ASI, SDG Indicators, SNA 2008, Data Quality)\n\nWhat specific topic or competency would you like to explore?"
 
 
@@ -1200,34 +1300,69 @@ async def generate_mcqs(
 
 @app.post("/api/chat")
 async def chat_endpoint(payload: ChatRequest):
-    """AI assistant — Gemini when configured, MoSPI knowledge engine fallback."""
+    """Universal AI assistant — Groq LLM & Gemini with fallback to MoSPI knowledge engine."""
     messages = payload.messages
     if not messages:
-        return {"response": "Hello! How can I assist your statistical learning journey today?"}
+        return {"response": "Namaste! 🙏 How can I assist your learning or answer your questions today?"}
 
     last_user_msg = messages[-1].content
 
-    if GEMINI_API_KEY:
-        system_prompt = f"""You are SkillPilot AI Assistant, a Chief Statistical Training Guide for India's Ministry of Statistics & Programme Implementation (MoSPI) and iGOT Karmayogi Bharat.
-User Role: {payload.userRole}
-User Department: {payload.userDepartment}
+    system_prompt = f"""You are SkillPilot AI Voice & Knowledge Assistant for India's Ministry of Statistics & Programme Implementation (MoSPI) and iGOT Karmayogi Bharat.
+User Role: {payload.userRole or 'Statistical Officer'}
+User Department: {payload.userDepartment or 'MoSPI'}
 
-Guidance:
-1. Provide accurate, professional, and context-rich answers regarding India's Official Statistical System, survey methods, National Accounts, CPI/WPI, SDGs, Python/R, DPDP Act 2023, and iGOT Karmayogi.
-2. Recommend relevant courses from iGOT Karmayogi or NSSTA TPAC where helpful.
-3. Keep responses structured, concise, friendly, and practical (around 100-180 words). Use bullet points for readability."""
+Instructions:
+1. You can answer ANY question the user asks: whether it is about MoSPI, Official Statistics (PLFS, ASI, CPI, GDP, Sampling), Data Science & Coding (Python, Pandas, SQL, R, AI/ML), General Knowledge, Mathematics, Government Policies (DPDP Act, Mission Karmayogi), or general conversational queries.
+2. Language: Respond in the language/dialect of the user. If the user asks in Hindi or Hinglish, answer in Hindi or friendly Hinglish. If in English, answer in English.
+3. Formatting: Keep responses crisp, clear, accurate, and structured (using bold highlights, bullet points, and code snippets when helpful). Keep length around 100-250 words unless detailed code/explanation is requested.
+4. When relevant to statistics, surveys, or government capacity building, recommend helpful iGOT Karmayogi courses or NSSTA TPAC modules."""
 
+    # 1. Try Groq Cloud (Ultra-Fast LLM)
+    if GROQ_API_KEY:
+        import requests
+        groq_messages = [{"role": "system", "content": system_prompt}]
+        for m in messages[-6:]:  # include up to last 6 turns for context
+            groq_messages.append({"role": m.role if m.role in ["user", "assistant"] else "user", "content": m.content})
+
+        groq_models = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b", "qwen/qwen3.6-27b", "allam-2-7b"]
+        for g_model in groq_models:
+            try:
+                groq_res = requests.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {GROQ_API_KEY}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": g_model,
+                        "messages": groq_messages,
+                        "temperature": 0.6,
+                        "max_tokens": 800,
+                    },
+                    timeout=15
+                )
+                if groq_res.status_code == 200:
+                    reply_text = groq_res.json()["choices"][0]["message"]["content"]
+                    if reply_text and reply_text.strip():
+                        return {"response": reply_text.strip(), "source": "Groq LLM"}
+            except Exception:
+                continue
+
+    # 2. Try Gemini API
+    if GEMINI_API_KEY and genai:
         for model_name in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-pro"]:
             try:
                 model = genai.GenerativeModel(model_name, system_instruction=system_prompt)
                 resp = model.generate_content(last_user_msg)
                 if resp.text:
-                    return {"response": resp.text, "source": "Gemini AI"}
+                    return {"response": resp.text.strip(), "source": "Gemini AI"}
             except Exception:
                 continue
 
+    # 3. Fallback to MoSPI Knowledge Engine
     reply = find_ai_response(last_user_msg, payload.userRole or "Statistical Officer")
     return {"response": reply, "source": "MoSPI Knowledge Engine"}
+
 
 
 # ==========================================

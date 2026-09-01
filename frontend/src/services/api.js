@@ -1,9 +1,18 @@
 import axios from 'axios';
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000';
+const getBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  // If envUrl is set to something other than localhost, use it, or fallback to auto-detecting the active host
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    return envUrl;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname) {
+    return `http://${window.location.hostname}:8000`;
+  }
+  return 'http://localhost:8000';
+};
+
+export const API_BASE_URL = getBaseUrl();
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -261,6 +270,7 @@ export const COURSES_CATALOG = [
     rating: 4.9,
     enrolled: 1420,
     badge: 'NSSTA Certified',
+    image: '/courses/course_sampling.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Comprehensive guide to multistage stratified sampling, cluster sampling, and weights calibration in official surveys.',
   },
@@ -275,6 +285,7 @@ export const COURSES_CATALOG = [
     rating: 4.8,
     enrolled: 3890,
     badge: 'iGOT Gold',
+    image: '/courses/course_python.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Mastering Pandas, NumPy, and automated cleaning pipelines for large-scale microdata (PLFS, ASI, NSS).',
   },
@@ -289,6 +300,7 @@ export const COURSES_CATALOG = [
     rating: 4.9,
     enrolled: 890,
     badge: 'MoSPI Core',
+    image: '/courses/course_accounts.jpg',
     url: 'https://mospi.gov.in/',
     description: 'Methodologies for Gross Value Added (GVA), GDP compilation, Supply-Use Tables, and deflators in National Accounts.',
   },
@@ -303,6 +315,7 @@ export const COURSES_CATALOG = [
     rating: 4.7,
     enrolled: 2150,
     badge: 'UN-SDG Aligned',
+    image: '/courses/course_sdg.jpg',
     url: 'https://mospi.gov.in/',
     description: 'Monitoring progress on 17 UN Sustainable Development Goals using standard MoSPI metadata and dashboard tools.',
   },
@@ -317,6 +330,7 @@ export const COURSES_CATALOG = [
     rating: 4.9,
     enrolled: 7650,
     badge: 'Mandatory GOI',
+    image: '/courses/course_dpdp.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Legal, ethical, and technological mandates for handling citizen data, anonymization, and cyber readiness.',
   },
@@ -331,6 +345,7 @@ export const COURSES_CATALOG = [
     rating: 4.6,
     enrolled: 1120,
     badge: 'Price Stat Specialist',
+    image: '/courses/course_accounts.jpg',
     url: 'https://mospi.gov.in/',
     description: 'Item basket weighting, base year revision, geometric mean price indices, and price data collection protocols.',
   },
@@ -345,6 +360,7 @@ export const COURSES_CATALOG = [
     rating: 4.8,
     enrolled: 1640,
     badge: 'AI Vanguard',
+    image: '/courses/course_python.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Supervised machine learning, satellite imagery classification for agriculture stats, and LLM automation.',
   },
@@ -359,6 +375,7 @@ export const COURSES_CATALOG = [
     rating: 4.7,
     enrolled: 1310,
     badge: 'Spatial Stats',
+    image: '/courses/course_sdg.jpg',
     url: 'https://mospi.gov.in/',
     description: 'Geospatial data integration with QGIS, thematic mapping of district-level socioeconomic indicators.',
   },
@@ -373,6 +390,7 @@ export const COURSES_CATALOG = [
     rating: 4.6,
     enrolled: 1980,
     badge: 'Digital Gov',
+    image: '/courses/course_dpdp.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Publishing machine-readable datasets on data.gov.in, REST API creation, and cloud security governance.',
   },
@@ -387,6 +405,7 @@ export const COURSES_CATALOG = [
     rating: 4.9,
     enrolled: 5200,
     badge: 'Ethics Leadership',
+    image: '/courses/course_sampling.jpg',
     url: 'https://igotkarmayogi.gov.in/',
     description: 'Fundamental Principles of Official Statistics (UN-FPOS), integrity in reporting, and evidence-based policy communication.',
   },

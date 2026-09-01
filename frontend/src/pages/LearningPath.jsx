@@ -203,27 +203,44 @@ export default function LearningPath() {
                     {path.courses.map((course, idx) => (
                       <div
                         key={course.id || idx}
+                        className="card-interactive"
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '16px',
-                          padding: '16px 20px',
-                          background: 'rgba(255,255,255,0.02)',
-                          border: '1px solid rgba(255,255,255,0.06)',
-                          borderRadius: '12px',
+                          padding: '14px 18px',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(99,102,241,0.02) 100%)',
+                          border: '1px solid rgba(255,255,255,0.07)',
+                          borderRadius: '14px',
                           flexWrap: 'wrap',
                         }}
                       >
+                        {/* Step Number Badge */}
                         <div style={{
-                          width: '36px', height: '36px', borderRadius: '10px',
-                          background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
+                          width: '32px', height: '32px', borderRadius: '8px',
+                          background: 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(6,182,212,0.2))',
+                          border: '1px solid rgba(99,102,241,0.4)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontWeight: 800, fontSize: '0.85rem', color: '#818cf8', flexShrink: 0
+                          fontWeight: 800, fontSize: '0.85rem', color: '#c7d2fe', flexShrink: 0
                         }}>
                           {idx + 1}
                         </div>
 
-                        <div style={{ flex: 1, minWidth: '240px' }}>
+                        {/* Mini Course Thumbnail */}
+                        <div style={{
+                          width: '64px', height: '54px', borderRadius: '10px',
+                          overflow: 'hidden', flexShrink: 0, position: 'relative',
+                          border: '1px solid rgba(255,255,255,0.1)'
+                        }}>
+                          <img
+                            src={course.image || (idx % 2 === 0 ? '/courses/course_python.jpg' : '/courses/course_sampling.jpg')}
+                            alt={course.title}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => { e.target.onerror = null; e.target.src = '/banners/banner1.jpg'; }}
+                          />
+                        </div>
+
+                        <div style={{ flex: 1, minWidth: '220px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                             <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#f8fafc' }}>
                               {course.title}
@@ -236,13 +253,13 @@ export default function LearningPath() {
                             </span>
                           </div>
 
-                          <div style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '6px' }}>
+                          <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginBottom: '6px' }}>
                             {course.description || `Comprehensive capacity building module covering ${course.skills?.join(', ') || 'core concepts'}.`}
                           </div>
 
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             {(course.skills || course.addressedSkills || []).map(sk => (
-                              <span key={sk} className="badge" style={{ background: 'rgba(255,255,255,0.04)', color: '#94a3b8', fontSize: '0.68rem' }}>
+                              <span key={sk} className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: '#cbd5e1', fontSize: '0.68rem', border: '1px solid rgba(255,255,255,0.06)' }}>
                                 {sk}
                               </span>
                             ))}
@@ -250,14 +267,14 @@ export default function LearningPath() {
                         </div>
 
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                          <span style={{ fontSize: '0.78rem', color: '#64748b', whiteSpace: 'nowrap' }}>
-                            <Clock size={13} style={{ verticalAlign: 'middle' }} /> {course.duration}
+                          <span style={{ fontSize: '0.78rem', color: '#94a3b8', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Clock size={13} color="#818cf8" /> {course.duration}
                           </span>
 
                           <button
                             className="btn btn-primary btn-sm"
                             onClick={() => handleLaunchIgot(course)}
-                            style={{ whiteSpace: 'nowrap' }}
+                            style={{ whiteSpace: 'nowrap', borderRadius: '8px' }}
                           >
                             <ExternalLink size={13} /> Launch on iGOT
                           </button>
@@ -266,6 +283,7 @@ export default function LearningPath() {
                             className="btn btn-outline btn-sm"
                             onClick={() => navigate('/mcq-generator')}
                             title="Generate practice quiz for this course"
+                            style={{ borderRadius: '8px' }}
                           >
                             <Brain size={13} /> Quiz
                           </button>

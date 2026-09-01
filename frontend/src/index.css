@@ -146,13 +146,16 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 24px;
-  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border);
-  box-shadow: var(--shadow-md);
+.card:hover, .stat-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .card-glow {
@@ -568,16 +571,220 @@ h1, h2, h3, h4, h5, h6 {
   color: #c7d2fe;
 }
 
-/* ---- Responsive ---- */
+/* ── Responsive ─────────────────────────────────── */
+
+/* Tablet */
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: 1fr 1fr; }
+  .page-content { padding: 20px; }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
+  /* Sidebar handled by JS (drawer) */
   .sidebar { transform: translateX(-100%); }
-  .main-content { margin-left: 0; }
+  .main-content { margin-left: 0 !important; }
+
+  /* Grids go single column */
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-  .page-content { padding: 16px; }
+
+  /* Tighter padding */
+  .page-content { padding: 14px 12px; }
+  .page-title  { font-size: 1.35rem; }
+
+  /* Topnav */
+  .topnav { padding: 0 12px; height: 56px; }
+
+  /* Cards */
+  .card { padding: 16px; }
+  .stat-card { padding: 16px; }
+  .stat-value { font-size: 1.6rem; }
+
+  /* Buttons */
+  .btn-lg { padding: 12px 20px; font-size: 0.9rem; }
+
+  /* Upload zone */
+  .upload-zone { padding: 32px 16px; }
+
+  /* Tabs — scrollable on mobile */
+  .tabs { overflow-x: auto; width: 100%; }
+
+  /* Login/Register split layout → stack vertically */
+  .auth-split { flex-direction: column !important; }
+  .auth-split > div:last-child { display: none !important; } /* hide decorative panel */
+  .auth-split > div:first-child {
+    padding: 32px 20px !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 400px) {
+  .page-content { padding: 10px 8px; }
+  .stat-value  { font-size: 1.4rem; }
+  .page-title  { font-size: 1.15rem; }
+}
+
+/* ── Additional Mobile Polish ────────────────────── */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll on all pages */
+  .page-content, .card, .stat-card {
+    max-width: 100%;
+    overflow-x: hidden;
+    word-break: break-word;
+  }
+
+  /* Fix inline flex rows that overflow on mobile */
+  .flex-row-mobile {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Text sizes for mobile */
+  h1 { font-size: 1.4rem !important; }
+  h2 { font-size: 1.2rem !important; }
+  h3 { font-size: 1.05rem !important; }
+
+  /* Make sure charts don't overflow */
+  .recharts-wrapper {
+    max-width: 100% !important;
+  }
+
+  /* Dashboard greeting card */
+  .greeting-title { font-size: 1.3rem !important; }
+
+  /* Fix bottom nav overlap - add safe area */
+  .page-content {
+    padding-bottom: 80px !important;
+  }
+
+  /* Fix buttons on mobile — full width in forms */
+  .btn-full-mobile { width: 100% !important; }
+
+  /* Fix tables overflow on mobile */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Stat cards — 2 per row on mobile */
+  .grid-4.stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Fix font zoom on iOS */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ── Modern Animations & Micro-Interactions ─────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.55), 0 0 10px rgba(6, 182, 212, 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes gradientRotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Card hover animation with subtle 3D lift */
+.card-interactive {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.6), 0 0 25px rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.45) !important;
+}
+
+/* Course Image Thumbnail hover zoom */
+.course-image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  height: 140px;
+  background: #0f172a;
+}
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .course-image {
+  transform: scale(1.06);
+}
+
+/* Glowing glass badge */
+.glass-badge {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Hero Section Banner shimmer */
+.hero-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 4s infinite linear;
 }
 

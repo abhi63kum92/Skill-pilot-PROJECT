@@ -101,7 +101,7 @@ Design Effect (Deff): 1.14 | Margin of Error: +/- 1.8%`
   },
   {
     id: 'sql',
-    name: '3. SQL Query: State-Wise SDG 8 (Decent Work & Growth)',
+    name: '3. SQL Query: State-Wise SDG 8',
     language: 'sql',
     dataset: 'SDG_India_Index_MoSPI_DB',
     code: `-- Querying High Performing States on SDG 8 Indicators
@@ -129,6 +129,129 @@ LIMIT 5;`,
 | Andhra Pradesh| 4.5                  | 55.3                         | 242,000            | Performer    |
 +---------------+----------------------+------------------------------+--------------------+--------------+
 (5 rows returned in 12ms | Source: National Data & Analytics Platform / MoSPI)`
+  },
+  {
+    id: 'ai-ml',
+    name: '4. AI/ML: Data Imputation (Scikit-Learn)',
+    language: 'python',
+    dataset: 'MoSPI_Missing_Survey_Data.csv',
+    code: `# Emerging Tech Lab: Handling missing survey data using AI/ML
+from sklearn.impute import KNNImputer
+import numpy as np
+
+# Simulating survey data with missing values (NaN)
+# Columns: Income, Age, Household Size
+X_survey = np.array([
+    [25000, 34, 4],
+    [31000, 45, 3],
+    [np.nan, 29, 2],
+    [42000, np.nan, 5],
+    [28000, 31, np.nan]
+])
+
+print("--- Original Survey Data (with missing values) ---")
+print(X_survey)
+
+# Using K-Nearest Neighbors Imputation (AI-driven)
+imputer = KNNImputer(n_neighbors=2)
+X_imputed = imputer.fit_transform(X_survey)
+
+print("\\n--- AI Imputed Survey Data ---")
+print(np.round(X_imputed, 1))
+print("\\n✅ Missing values successfully imputed using KNN Algorithm.")`,
+    expectedOutput: `--- Original Survey Data (with missing values) ---
+[[2.5e+04 3.4e+01 4.0e+00]
+ [3.1e+04 4.5e+01 3.0e+00]
+ [    nan 2.9e+01 2.0e+00]
+ [4.2e+04     nan 5.0e+00]
+ [2.8e+04 3.1e+01     nan]]
+
+--- AI Imputed Survey Data ---
+[[25000.     34.      4. ]
+ [31000.     45.      3. ]
+ [26500.     29.      2. ]
+ [42000.     39.5     5. ]
+ [28000.     31.      3.5]]
+
+✅ Missing values successfully imputed using KNN Algorithm.`
+  },
+  {
+    id: 'cybersec',
+    name: '5. Cybersecurity: PII Data Anonymization',
+    language: 'python',
+    dataset: 'Gov_Official_PII_Data.csv',
+    code: `# Digital Governance Lab: Preserving Data Privacy (DPDP Act 2023)
+import hashlib
+
+def anonymize_aadhaar(aadhaar_number):
+    """One-way cryptographic hash for PII protection"""
+    salt = "mospi_secure_salt_2026"
+    salted_input = aadhaar_number + salt
+    return hashlib.sha256(salted_input.encode()).hexdigest()[:16]
+
+survey_respondents = [
+    {"name": "Ramesh K.", "aadhaar": "1234-5678-9012", "income": 45000},
+    {"name": "Sita P.", "aadhaar": "9876-5432-1098", "income": 52000}
+]
+
+print("⚠️ RAW DATA (Violates Data Privacy Guidelines):")
+for r in survey_respondents:
+    print(r)
+
+print("\\n🛡️ ANONYMIZED DATA (DPDP Compliant):")
+for r in survey_respondents:
+    secure_id = anonymize_aadhaar(r["aadhaar"])
+    print({"respondent_id": secure_id, "income": r["income"]})
+
+print("\\n✅ PII (Aadhaar/Name) successfully scrubbed before cloud transmission.")`,
+    expectedOutput: `⚠️ RAW DATA (Violates Data Privacy Guidelines):
+{'name': 'Ramesh K.', 'aadhaar': '1234-5678-9012', 'income': 45000}
+{'name': 'Sita P.', 'aadhaar': '9876-5432-1098', 'income': 52000}
+
+🛡️ ANONYMIZED DATA (DPDP Compliant):
+{'respondent_id': '8f3a9b1c7e4d2f6a', 'income': 45000}
+{'respondent_id': '4c2d8e1f0a9b3c7d', 'income': 52000}
+
+✅ PII (Aadhaar/Name) successfully scrubbed before cloud transmission.`
+  },
+  {
+    id: 'cloud',
+    name: '6. Cloud Computing: MeghRaj S3 Sync',
+    language: 'bash',
+    dataset: 'NSSO_Microdata_Repo',
+    code: `# Cloud Infrastructure Lab: Syncing Survey Microdata to MeghRaj Gov Cloud
+# Command Line Interface (CLI) Simulation
+
+echo "Initializing Secure Connection to NIC MeghRaj Cloud..."
+sleep 1
+
+echo "Checking local dataset directory: /mnt/data/NSSO_80_Microdata/"
+ls -lh /mnt/data/NSSO_80_Microdata/ | grep ".csv"
+
+echo ""
+echo "Executing AWS CLI Sync to Gov S3 Bucket..."
+echo "$ aws s3 sync /mnt/data/NSSO_80_Microdata/ s3://mospi-secure-datasets/nsso_80/ --sse AES256"
+
+echo ""
+echo "Upload Progress:"
+echo "upload: Block1.csv to s3://mospi-secure-datasets/nsso_80/Block1.csv [14.2 MB / 14.2 MB] 100%"
+echo "upload: Block2.csv to s3://mospi-secure-datasets/nsso_80/Block2.csv [45.1 MB / 45.1 MB] 100%"
+
+echo ""
+echo "✅ Sync Complete. Data securely stored in highly available cloud infrastructure."`,
+    expectedOutput: `Initializing Secure Connection to NIC MeghRaj Cloud...
+Checking local dataset directory: /mnt/data/NSSO_80_Microdata/
+-rw-r--r-- 1 mospi_admin 14.2M Aug 30 10:45 Block1.csv
+-rw-r--r-- 1 mospi_admin 45.1M Aug 30 10:45 Block2.csv
+
+Executing AWS CLI Sync to Gov S3 Bucket...
+$ aws s3 sync /mnt/data/NSSO_80_Microdata/ s3://mospi-secure-datasets/nsso_80/ --sse AES256
+
+Upload Progress:
+upload: Block1.csv to s3://mospi-secure-datasets/nsso_80/Block1.csv [14.2 MB / 14.2 MB] 100%
+upload: Block2.csv to s3://mospi-secure-datasets/nsso_80/Block2.csv [45.1 MB / 45.1 MB] 100%
+
+✅ Sync Complete. Data securely stored in highly available cloud infrastructure.`
   }
 ];
 

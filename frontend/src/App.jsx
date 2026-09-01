@@ -17,6 +17,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import VirtualLab from './pages/VirtualLab';
 import Certificates from './pages/Certificates';
 import IgotHub from './pages/IgotHub';
+import OnboardingPage from './pages/OnboardingPage';
 import './App.css';
 
 /** Shown while JWT session is being restored from server */
@@ -97,6 +98,7 @@ export default function App() {
                 <Route path="lab" element={<VirtualLab />} />
                 <Route path="certificates" element={<Certificates />} />
                 <Route path="igot-hub" element={<IgotHub />} />
+                <Route path="onboard" element={<OnboardingPage />} />
                 <Route
                   path="admin"
                   element={

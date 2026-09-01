@@ -213,6 +213,22 @@ export default function QuizTake() {
           localStorage.setItem(compKey, JSON.stringify(updatedComp));
           updateUser({ competencies: updatedComp });
 
+          // Generate Real Certificate
+          const newCert = {
+            id: 'CERT-' + Math.floor(Math.random() * 1000000),
+            title: quiz.title || 'MoSPI Official Assessment',
+            issuer: 'Ministry of Statistics & Programme Implementation (MoSPI) & iGOT Karmayogi',
+            issueDate: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+            credentialId: 'IGOT-MOSPI-' + new Date().getFullYear() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
+            score: scoreData.percentage + '%',
+            hours: '15 Hours',
+            domain: topics[0] || 'Technical Competency'
+          };
+          const certKey = 'skillpilot_certs_' + user.email;
+          const currentCertsStr = localStorage.getItem(certKey);
+          const currentCerts = currentCertsStr ? JSON.parse(currentCertsStr) : [];
+          localStorage.setItem(certKey, JSON.stringify([newCert, ...currentCerts]));
+
           // Refresh intelligence assessment
           const newAssessment = await assessCompetencies(user, updatedComp);
           updateAssessment(newAssessment);

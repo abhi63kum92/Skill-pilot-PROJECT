@@ -135,73 +135,122 @@ export default function CourseCatalog() {
       </div>
 
       {/* Course Cards Grid */}
-      <div className="grid-3" style={{ gap: '20px' }}>
+      <div className="grid-3" style={{ gap: '22px' }}>
         {filtered.map(course => {
           const isEnrolled = enrolled.has(course.id);
 
           return (
-            <div key={course.id} className="card" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                <span className={`badge badge-${course.provider.includes('iGOT') ? 'primary' : 'info'}`} style={{ fontSize: '0.68rem' }}>
-                  {course.provider}
-                </span>
-
+            <div
+              key={course.id}
+              className="card card-interactive"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                padding: 0,
+                overflow: 'hidden',
+                borderRadius: '16px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'linear-gradient(180deg, rgba(22, 22, 31, 0.95) 0%, rgba(17, 17, 24, 0.98) 100%)',
+              }}
+            >
+              {/* Course Thumbnail Image */}
+              <div className="course-image-container">
+                <img
+                  src={course.image || '/courses/course_python.jpg'}
+                  alt={course.title}
+                  className="course-image"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/banners/banner1.jpg';
+                  }}
+                />
                 <div style={{
-                  background: 'rgba(99,102,241,0.15)',
-                  border: '1px solid rgba(99,102,241,0.3)',
-                  borderRadius: '999px',
-                  padding: '3px 10px', fontSize: '0.72rem', fontWeight: 700,
-                  color: course.match >= 85 ? '#34d399' : '#fbbf24'
-                }}>
-                  🎯 {course.match}% Gap Match
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(10,10,15,0.85) 100%)'
+                }} />
+
+                {/* Floating Badges over Image */}
+                <div style={{ position: 'absolute', top: '10px', left: '12px', right: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span className="glass-badge" style={{
+                    padding: '3px 9px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 700, color: '#e2e8f0', letterSpacing: '0.02em'
+                  }}>
+                    {course.provider}
+                  </span>
+
+                  <div className="glass-badge" style={{
+                    borderRadius: '999px',
+                    padding: '3px 10px', fontSize: '0.72rem', fontWeight: 700,
+                    color: course.match >= 85 ? '#34d399' : '#fbbf24',
+                    display: 'flex', alignItems: 'center', gap: '4px'
+                  }}>
+                    <Sparkles size={11} color={course.match >= 85 ? '#34d399' : '#fbbf24'} />
+                    {course.match}% Match
+                  </div>
+                </div>
+
+                <div style={{ position: 'absolute', bottom: '8px', left: '12px' }}>
+                  <span style={{
+                    fontSize: '0.66rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em',
+                    padding: '2px 8px', borderRadius: '4px',
+                    background: course.domain === 'Statistical' ? 'rgba(99,102,241,0.8)' : course.domain === 'Technical' ? 'rgba(6,182,212,0.8)' : 'rgba(16,185,129,0.8)',
+                    color: 'white'
+                  }}>
+                    {course.domain}
+                  </span>
                 </div>
               </div>
 
-              <h3 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.4, color: '#f8fafc' }}>
-                {course.title}
-              </h3>
+              {/* Course Card Body */}
+              <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <h3 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.4, color: '#f8fafc' }}>
+                  {course.title}
+                </h3>
 
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '14px', lineHeight: 1.5, flex: 1 }}>
-                {course.description}
-              </p>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '14px', lineHeight: 1.5, flex: 1 }}>
+                  {course.description}
+                </p>
 
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
-                {course.skills.map(sk => (
-                  <span key={sk} className="badge" style={{ background: 'rgba(255,255,255,0.04)', color: '#cbd5e1', fontSize: '0.68rem' }}>
-                    {sk}
+                <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                  {course.skills.map(sk => (
+                    <span key={sk} className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: '#cbd5e1', fontSize: '0.68rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                      {sk}
+                    </span>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: '#64748b', marginBottom: '16px', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#94a3b8' }}>
+                    <Clock size={13} color="#818cf8" /> {course.duration}
                   </span>
-                ))}
-              </div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#fbbf24', fontWeight: 600 }}>
+                    <Star size={13} color="#fbbf24" fill="#fbbf24" /> {course.rating}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#94a3b8' }}>
+                    <Users size={13} color="#06b6d4" /> {course.enrolled.toLocaleString()}
+                  </span>
+                </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: '#64748b', marginBottom: '16px', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Clock size={13} /> {course.duration}
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Star size={13} color="#fbbf24" fill="#fbbf24" /> {course.rating}
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Users size={13} /> {course.enrolled.toLocaleString()} learners
-                </span>
-              </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    className={`btn ${isEnrolled ? 'btn-secondary' : 'btn-primary'}`}
+                    style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem', borderRadius: '10px' }}
+                    onClick={() => handleEnroll(course.id, course.title, course.url)}
+                  >
+                    {isEnrolled ? <><CheckCircle2 size={14} color="#10b981" /> Enrolled</> : <><BookOpen size={14} /> Enroll in Track</>}
+                  </button>
 
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  className={`btn ${isEnrolled ? 'btn-secondary' : 'btn-primary'}`}
-                  style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem' }}
-                  onClick={() => handleEnroll(course.id, course.title, course.url)}
-                >
-                  {isEnrolled ? <><CheckCircle2 size={14} color="#10b981" /> Enrolled</> : <><BookOpen size={14} /> Enroll in Track</>}
-                </button>
-
-                <button
-                  className="btn btn-outline"
-                  style={{ padding: '8px 12px' }}
-                  onClick={() => handleOpenIgot(course.url, course.title)}
-                  title="Launch module on official iGOT Karmayogi portal"
-                >
-                  <ExternalLink size={14} />
-                </button>
+                  <button
+                    className="btn btn-outline"
+                    style={{ padding: '8px 12px', borderRadius: '10px' }}
+                    onClick={() => handleOpenIgot(course.url, course.title)}
+                    title="Launch module on official iGOT Karmayogi portal"
+                  >
+                    <ExternalLink size={14} />
+                  </button>
+                </div>
               </div>
             </div>
           );

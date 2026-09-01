@@ -1,4 +1,42 @@
+# Environment & Secret Keys (CRITICAL - Never push to GitHub)
+.env
+*.env
+*.env.local
+*.env.production
 backend/.env
 frontend/.env
-backend/venv/
+
+# Dependencies
+node_modules/
 frontend/node_modules/
+venv/
+backend/venv/
+.venv/
+env/
+
+# Python Cache & Bytecode
+__pycache__/
+backend/__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+backend/skillpilot.db
+backend/*.db
+
+# Frontend Build outputs
+dist/
+frontend/dist/
+.vite/
+frontend/.vite/
+
+# Temporary & Lock files
+~$*.pptx
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

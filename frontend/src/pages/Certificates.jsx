@@ -1,49 +1,92 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Award, Download, Printer, CheckCircle, ExternalLink, ShieldCheck, QrCode } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Award, Download, Printer, CheckCircle, ExternalLink, ShieldCheck, QrCode, BookOpen, ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-const CERTIFICATES = [
-  {
-    id: 'CERT-001',
-    title: 'Python for Statistical Analysis & Data Processing',
-    issuer: 'Ministry of Statistics & Programme Implementation (MoSPI) & iGOT Karmayogi',
-    issueDate: '15 August 2026',
-    credentialId: 'IGOT-MOSPI-2026-8891A',
-    score: '92%',
-    hours: '20 Hours',
-    domain: 'Technical Competency'
-  },
-  {
-    id: 'CERT-002',
-    title: 'Sustainable Development Goals (SDG) Indicator Framework',
-    issuer: 'National Statistical Systems Training Academy (NSSTA TPAC)',
-    issueDate: '22 July 2026',
-    credentialId: 'NSSTA-TPAC-2026-4412B',
-    score: '96%',
-    hours: '12 Hours',
-    domain: 'Statistical Methodology'
-  },
-  {
-    id: 'CERT-003',
-    title: 'Cybersecurity & Government Data Privacy Frameworks',
-    issuer: 'iGOT Karmayogi Digital Governance Division',
-    issueDate: '10 June 2026',
-    credentialId: 'IGOT-GOV-2026-1198C',
-    score: '88%',
-    hours: '10 Hours',
-    domain: 'Digital Governance'
-  }
-];
+import html2canvas from 'html2canvas';
 
 export default function Certificates() {
   const { user } = useAuth();
-  const [selectedCert, setSelectedCert] = useState(CERTIFICATES[0]);
+  const navigate = useNavigate();
+  const [certs, setCerts] = useState([]);
+  const [selectedCert, setSelectedCert] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      const storedCerts = localStorage.getItem('skillpilot_certs_' + user.email);
+      if (storedCerts) {
+        try {
+          const parsed = JSON.parse(storedCerts);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setCerts(parsed);
+            return;
+          }
+        } catch {
+          // ignore error
+        }
+      }
+
+      // Default initial verified credentials for demo personas
+      const defaultCerts = [
+        {
+          id: 'CERT-MOSPI-8821',
+          title: 'Advanced Survey Sampling & Estimation Techniques',
+          issuer: 'National Statistical Systems Training Academy (NSSTA) & iGOT Karmayogi',
+          issueDate: '15 January 2026',
+          credentialId: 'IGOT-MOSPI-2026-SMPL-8821',
+          score: '94%',
+          hours: '30 Hours',
+          domain: 'Statistical Competency'
+        },
+        {
+          id: 'CERT-MOSPI-7412',
+          title: 'DPDP Act 2023 & Digital Governance for Civil Servants',
+          issuer: 'Ministry of Electronics & IT (MeitY) & Karmayogi Bharat',
+          issueDate: '02 February 2026',
+          credentialId: 'IGOT-MEITY-2026-DPDP-7412',
+          score: '88%',
+          hours: '20 Hours',
+          domain: 'Digital Governance'
+        },
+        {
+          id: 'CERT-MOSPI-6320',
+          title: 'System of National Accounts (SNA 2008) & GDP Estimation',
+          issuer: 'National Accounts Division (NAD) / MoSPI',
+          issueDate: '18 February 2026',
+          credentialId: 'IGOT-MOSPI-2026-SNAD-6320',
+          score: '91%',
+          hours: '25 Hours',
+          domain: 'Statistical Competency'
+        }
+      ];
+      setCerts(defaultCerts);
+      localStorage.setItem('skillpilot_certs_' + user.email, JSON.stringify(defaultCerts));
+    }
+  }, [user]);
 
   const handlePrint = () => {
     window.print();
     toast.success('Preparing certificate for print/PDF export');
+  };
+
+  const handleDownloadImage = async () => {
+    const element = document.getElementById('certificate-frame');
+    if (!element) return;
+    
+    try {
+      toast.loading('Generating high-quality image...', { id: 'cert-gen' });
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+      const dataUrl = canvas.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = 'SkillPilot-Certificate-' + (user?.name?.replace(/\\s+/g, '_') || 'Officer') + '.png';
+      link.href = dataUrl;
+      link.click();
+      toast.success('Certificate downloaded successfully!', { id: 'cert-gen' });
+    } catch (err) {
+      toast.error('Failed to generate image', { id: 'cert-gen' });
+    }
   };
 
   const handleDownload = (cert) => {
@@ -62,50 +105,66 @@ export default function Certificates() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <span className="badge badge-success">3 Verified Badges</span>
+            <span className="badge badge-success">{certs.length} Verified Badges</span>
           </div>
         </div>
       </div>
 
-      {/* Certificate Cards Grid */}
-      <div className="grid-3" style={{ gap: '20px', marginBottom: '32px' }}>
-        {CERTIFICATES.map((cert) => (
-          <div key={cert.id} className="card" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <div style={{
-              width: '44px', height: '44px', borderRadius: '12px',
-              background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(6,182,212,0.2))',
-              border: '1px solid rgba(99,102,241,0.4)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px'
-            }}>
-              <Award size={24} color="#818cf8" />
+      {certs.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <div style={{ width: '80px', height: '80px', background: 'rgba(99,102,241,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Award size={40} color="#6366f1" />
             </div>
-
-            <span className="badge badge-primary" style={{ width: 'fit-content', marginBottom: '10px' }}>
-              {cert.domain}
-            </span>
-
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.4 }}>
-              {cert.title}
-            </h3>
-
-            <p style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '16px', flex: 1 }}>
-              {cert.issuer}
-            </p>
-
-            <div style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', fontSize: '0.75rem', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Score: <strong style={{ color: '#10b981' }}>{cert.score}</strong></span>
-              <span>Issued: <strong>{cert.issueDate}</strong></span>
-            </div>
-
-            <button className="btn btn-primary" onClick={() => handleDownload(cert)} style={{ width: '100%', justifyContent: 'center' }}>
-              <Award size={15} /> View & Export Certificate
-            </button>
           </div>
-        ))}
-      </div>
+          <h2 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>No Certificates Earned Yet</h2>
+          <p style={{ color: '#94a3b8', maxWidth: '400px', margin: '0 auto 24px', lineHeight: 1.6 }}>
+            You haven't completed any assessments. Take an AI-generated quiz to earn verified iGOT Karmayogi certificates.
+          </p>
+          <button className="btn btn-primary" onClick={() => navigate('/mcq-generator')} style={{ margin: '0 auto' }}>
+            <BookOpen size={16} /> Take an Assessment
+          </button>
+        </div>
+      ) : (
+        <div className="grid-3" style={{ gap: '20px', marginBottom: '32px' }}>
+          {certs.map((cert) => (
+            <div key={cert.id} className="card" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+              <div style={{
+                width: '44px', height: '44px', borderRadius: '12px',
+                background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(6,182,212,0.2))',
+                border: '1px solid rgba(99,102,241,0.4)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px'
+              }}>
+                <Award size={24} color="#818cf8" />
+              </div>
+
+              <span className="badge badge-primary" style={{ width: 'fit-content', marginBottom: '10px' }}>
+                {cert.domain}
+              </span>
+
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.4 }}>
+                {cert.title}
+              </h3>
+
+              <p style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '16px', flex: 1 }}>
+                {cert.issuer}
+              </p>
+
+              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', fontSize: '0.75rem', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
+                <span>Score: <strong style={{ color: '#10b981' }}>{cert.score}</strong></span>
+                <span>Issued: <strong>{cert.issueDate}</strong></span>
+              </div>
+
+              <button className="btn btn-primary" onClick={() => handleDownload(cert)} style={{ width: '100%', justifyContent: 'center' }}>
+                <Award size={15} /> View & Export Certificate
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Official Certificate Preview Modal */}
-      {showModal && (
+      {showModal && selectedCert && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 1000,
           background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
@@ -114,9 +173,9 @@ export default function Certificates() {
           <div style={{
             background: '#ffffff', color: '#0f172a',
             width: '100%', maxWidth: '820px', borderRadius: '16px',
-            padding: '40px', position: 'relative', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)'
+            padding: '30px', position: 'relative', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+            maxHeight: '90vh', overflowY: 'auto'
           }}>
-            {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
               style={{
@@ -128,12 +187,11 @@ export default function Certificates() {
               ✕
             </button>
 
-            {/* Certificate Frame */}
-            <div style={{
+            <div id="certificate-frame" style={{
               border: '6px double #312e81', padding: '32px',
-              borderRadius: '8px', textAlign: 'center', position: 'relative', background: '#fafaf9'
+              borderRadius: '8px', textAlign: 'center', position: 'relative', background: '#fafaf9',
+              minWidth: '600px'
             }}>
-              {/* Header Logos */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <div style={{ textAlign: 'left' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#312e81', letterSpacing: '0.05em' }}>
@@ -164,10 +222,10 @@ export default function Certificates() {
               </div>
 
               <div style={{ fontSize: '1.7rem', fontWeight: 800, color: '#4338ca', borderBottom: '2px solid #c7d2fe', paddingBottom: '8px', display: 'inline-block', minWidth: '320px', marginBottom: '14px', fontFamily: 'Space Grotesk, sans-serif' }}>
-                {user?.name || 'Rajesh Kumar'}
+                {user?.name || 'Authorized Officer'}
               </div>
               <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '20px' }}>
-                Designation: <strong>{user?.designation || 'Statistical Officer'}</strong> | Department: <strong>{user?.department || 'National Statistical Office (NSO)'}</strong>
+                Designation: <strong>{user?.designation || 'Officer'}</strong> | Department: <strong>{user?.department || 'National Statistical Office (NSO)'}</strong>
               </div>
 
               <p style={{ fontSize: '0.92rem', color: '#334155', maxWidth: '580px', margin: '0 auto 24px', lineHeight: 1.6 }}>
@@ -175,7 +233,6 @@ export default function Certificates() {
                 <strong> "{selectedCert.title}"</strong> with a verified proficiency grade of <strong>{selectedCert.score}</strong>.
               </p>
 
-              {/* Certificate Footer */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
                 <div style={{ textAlign: 'left', fontSize: '0.75rem', color: '#64748b' }}>
                   <div>Credential ID: <strong>{selectedCert.credentialId}</strong></div>
@@ -203,13 +260,15 @@ export default function Certificates() {
               </div>
             </div>
 
-            {/* Modal Actions */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '20px', flexWrap: 'wrap' }}>
               <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
                 Close
               </button>
+              <button className="btn btn-primary" onClick={handleDownloadImage} style={{ background: '#10b981', color: '#fff', border: 'none' }}>
+                <ImageIcon size={16} /> Download PNG
+              </button>
               <button className="btn btn-primary" onClick={handlePrint}>
-                <Printer size={16} /> Print / Save as PDF
+                <Printer size={16} /> Print / PDF
               </button>
             </div>
           </div>
