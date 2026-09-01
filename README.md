@@ -30,8 +30,8 @@
 
 ## 👥 Contributors & Core Team
 
-- **Abhishek Kumar** ([@abhi63kum92](https://github.com/abhi63kum92)) — Lead Developer
-- **Ichhaa Dahiya** ([@ichhaadahiya-AI](https://github.com/ichhaadahiya-AI)) — Core Contributor / Research & Development
+- **Abhishek Kumar** ([@abhi63kum92](https://github.com/abhi63kum92)) — Lead Developer / Full-Stack & AI Architecture
+- **Ichhaa Dahiya** ([@ichhaadahiya-AI](https://github.com/ichhaadahiya-AI)) — Research, Frontend & MoSPI Competency Evaluation
 
 ---
 
